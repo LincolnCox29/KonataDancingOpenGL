@@ -1,0 +1,5 @@
+﻿  KonataDancingOpenGL.c
+C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(38,5): warning C4026: функция объявлена со списком формальных параметров
+C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(76,21): warning C4020: loadImg: слишком много фактических параметров
+C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(136,6): warning C4029: объявленный список формальных параметров отличается от объявления
+  KonataDancingOpenGL.vcxproj -> C:\Users\79242\Desktop\KonataDancingOpenGL\x64\Debug\KonataDancingOpenGL.exe
