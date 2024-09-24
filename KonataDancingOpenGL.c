@@ -79,7 +79,6 @@ void mainLoop(GLFWwindow* window)
 		updataImgIndex(&imgIndex);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		stbi_image_free(imageData);
 
 		endTime = glfwGetTime();
 		frameTime = endTime - startTime;
@@ -87,8 +86,9 @@ void mainLoop(GLFWwindow* window)
 		if (frameTime < TARGET_FRAME_TIME)
 		{
 			waitTime = TARGET_FRAME_TIME - frameTime;
-			while (glfwGetTime() - endTime < waitTime);
+			Sleep((DWORD)(waitTime * 1000)); 
 		}
+		stbi_image_free(imageData);
 	}
 }
 
