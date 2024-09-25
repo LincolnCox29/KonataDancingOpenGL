@@ -1,11 +1,11 @@
 ﻿  KonataDancingOpenGL.c
-C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(38,5): warning C4026: функция объявлена со списком формальных параметров
-C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(76,21): warning C4020: loadImg: слишком много фактических параметров
-C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(140,6): warning C4029: объявленный список формальных параметров отличается от объявления
-  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(37,12): warning C4026: функция объявлена со списком формальных параметров
+C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(37,12): warning C4008: WinMain: пропуск атрибута "static"
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
   Создание кода
-  All 171 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  0 of 170 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
 glew32s.lib(glew.obj) : warning LNK4099: "" PDB не найден с "glew32s.lib(glew.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
   KonataDancingOpenGL.vcxproj -> C:\Users\79242\Desktop\KonataDancingOpenGL\x64\Release\KonataDancingOpenGL.exe

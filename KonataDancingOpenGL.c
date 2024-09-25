@@ -21,21 +21,20 @@ static const float texCord[] = { 0,1, 1,1, 1,0, 0,0 };
 
 #define TARGET_FRAME_TIME 1.0f / 35.0f
 
-#define DEBUG
-
 GLFWwindow* winInit();
 void winHints();
 void errLog();
-void mainLoop();
-void render();
-void loadImg(int index);
+void mainLoop(GLFWwindow* window);
+void render(GLuint texture, const float* vertex, const float* texCord);
+void loadImg(int index, GLuint* texture);
 void updataImgIndex(int* index);
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
 bool isOpaquePixel(int x, int y);
 void setupRenderingState();
+void fpsSync(double startTime);
 
-int WinMain()
+static int WinMain()
 {
 	if (!glfwInit())
 		errLog();
@@ -58,20 +57,18 @@ int WinMain()
 
 void mainLoop(GLFWwindow* window)
 {
-	const float vertex[] = { -1,-1,0,1,-1,0,1,1,0,-1,1,0 };
-	const float texCord[] = { 0,1, 1,1, 1,0, 0,0 };
-
 	int imgIndex = 1;
 
 	GLuint texture;
 
-	double endTime, frameTime, waitTime;
+	double startTime;
+
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		double startTime = glfwGetTime();
+		startTime = glfwGetTime();
 
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		loadImg(imgIndex, &texture);
 		render(texture, vertex, texCord);
@@ -79,15 +76,7 @@ void mainLoop(GLFWwindow* window)
 		updataImgIndex(&imgIndex);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-		endTime = glfwGetTime();
-		frameTime = endTime - startTime;
-
-		if (frameTime < TARGET_FRAME_TIME)
-		{
-			waitTime = TARGET_FRAME_TIME - frameTime;
-			Sleep((DWORD)(waitTime * 1000)); 
-		}
+		fpsSync(startTime);
 		stbi_image_free(imageData);
 	}
 }
@@ -114,9 +103,11 @@ void winHints()
 
 void errLog()
 {
+#ifdef DEBUG
 	const char* description;
 	int code = glfwGetError(&description);
 	fprintf(stderr, "ERROR! %d: %s\n", code, description);
+#endif // DEBUG
 	glfwTerminate();
 }
 
@@ -152,7 +143,7 @@ void loadImg(int index, GLuint* texture)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIN_SIZE_W, WIN_SIZE_H, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 }
 
 void updataImgIndex(int* index)
@@ -215,7 +206,8 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 bool isOpaquePixel(int x, int y)
 {
-	if (!imageData) return false;
+	if (!imageData) 
+		return false;
 
 	int index = (y * WIN_SIZE_W + x) * 4;
 
@@ -228,4 +220,18 @@ void setupRenderingState()
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void fpsSync(double startTime)
+{
+	double endTime, frameTime, waitTime;
+
+	endTime = glfwGetTime();
+	frameTime = endTime - startTime;
+
+	if (frameTime < TARGET_FRAME_TIME)
+	{
+		waitTime = TARGET_FRAME_TIME - frameTime;
+		Sleep((DWORD)(waitTime * 1000));
+	}
 }

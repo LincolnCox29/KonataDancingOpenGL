@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{CA87F7C1-998A-4649-BD27-7CC7E6D086E0}|KonataDancingOpenGL.vcxproj|C:\\Users\\79242\\Desktop\\KonataDancingOpenGL\\KonataDancingOpenGL.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CA87F7C1-998A-4649-BD27-7CC7E6D086E0}|KonataDancingOpenGL.vcxproj|solutionrelative:KonataDancingOpenGL.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CA87F7C1-998A-4649-BD27-7CC7E6D086E0}|KonataDancingOpenGL.vcxproj|C:\\Users\\79242\\Desktop\\KonataDancingOpenGL\\stb_image.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CA87F7C1-998A-4649-BD27-7CC7E6D086E0}|KonataDancingOpenGL.vcxproj|solutionrelative:stb_image.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +18,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "stb_image.h",
+              "DocumentMoniker": "C:\\Users\\79242\\Desktop\\KonataDancingOpenGL\\stb_image.h",
+              "RelativeDocumentMoniker": "stb_image.h",
+              "ToolTip": "C:\\Users\\79242\\Desktop\\KonataDancingOpenGL\\stb_image.h",
+              "RelativeToolTip": "stb_image.h",
+              "ViewState": "AQIAAIcUAAAAAAAAAAAawKQUAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-09-25T04:41:43.092Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,7 +41,7 @@
               "RelativeDocumentMoniker": "KonataDancingOpenGL.c",
               "ToolTip": "C:\\Users\\79242\\Desktop\\KonataDancingOpenGL\\KonataDancingOpenGL.c",
               "RelativeToolTip": "KonataDancingOpenGL.c",
-              "ViewState": "AQIAAEUAAAAAAAAAAAAAAFgAAAAjAAAA",
+              "ViewState": "AQIAAGkAAAAAAAAAAAAswH4AAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-09-24T07:38:44.518Z",
               "EditorCaption": ""
