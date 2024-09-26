@@ -36,12 +36,14 @@ void glfwErrLog();
 void mainLoop(GLFWwindow* window, TimeManager* timeManager);
 void render(const float* vertex, const float* texCord);
 void loadImg(int index);
+void loadTexture(int index);
 void updataImgIndex(int* index);
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
 bool isOpaquePixel(int x, int y);
 void setupRenderingState();
 void fpsSync(TimeManager* timeManager);
+void setClickThrough(HWND hwnd);
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -78,7 +80,7 @@ void mainLoop(GLFWwindow* window, TimeManager* timeManager)
 		timeManager->startTime = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		loadImg(imgIndex);
+		loadTexture(imgIndex);
 		render(vertex, texCord);
 		updataImgIndex(&imgIndex);
 		glfwSwapBuffers(window);
@@ -96,6 +98,12 @@ GLFWwindow* winInit()
 	glfwMakeContextCurrent(window);
 
 	HWND hwnd = glfwGetWin32Window(window);
+
+	LONG style = GetWindowLong(hwnd, GWL_EXSTYLE);
+	SetWindowLong(hwnd, GWL_EXSTYLE, style | WS_EX_LAYERED);
+
+	SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
+
 	SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 
 	return window;
@@ -134,14 +142,11 @@ void render(const float* vertex, const float* texCord)
 	glPopMatrix();
 }
 
-void loadImg(int index)
+void loadTexture(int index)
 {
 	if (currentTextureLoad > 0)
 	{
-		char path[32] = { '\0' };
-		sprintf_s(path, 32, "frames\\frame_%04d.png", index);
-		int width, height, cnt;
-		imageData = stbi_load(path, &width, &height, &cnt, 0);
+		loadImg(index);
 
 		glGenTextures(1, &texturePool[index]);
 		glBindTexture(GL_TEXTURE_2D, texturePool[index]);
@@ -149,11 +154,19 @@ void loadImg(int index)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIN_SIZE_W, WIN_SIZE_H, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 
 		currentTextureLoad -= 2;
 	}
 	else glBindTexture(GL_TEXTURE_2D, texturePool[index]);
+}
+
+void loadImg(int index)
+{
+	char path[32] = { '\0' };
+	sprintf_s(path, 32, "frames\\frame_%04d.png", index);
+	int width, height, cnt;
+	imageData = stbi_load(path, &width, &height, &cnt, 0);
 }
 
 void updataImgIndex(int* index)
@@ -169,28 +182,29 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 	{
 		HWND hwnd = glfwGetWin32Window(window);
 
-		if (action == GLFW_PRESS)
+		switch (action)
 		{
-			double xpos, ypos;
-			glfwGetCursorPos(window, &xpos, &ypos);
-
-			int pixelX = (int)xpos;
-			int pixelY = WIN_SIZE_H - (int)ypos;
-
-			if (isOpaquePixel(pixelX, pixelY))
+			case GLFW_PRESS:
 			{
-				isDragging = true;
+				double xpos, ypos;
+				glfwGetCursorPos(window, &xpos, &ypos);
 
-				POINT cursorPos;
-				GetCursorPos(&cursorPos);
-				lastPos = cursorPos;
+				int pixelX = (int)xpos;
+				int pixelY = WIN_SIZE_H - (int)ypos;
 
-				RECT rect;
-				GetWindowRect(hwnd, &rect);
+				if (isOpaquePixel(pixelX, pixelY))
+				{
+					isDragging = true;
+					GetCursorPos(&lastPos);
+				}
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				isDragging = false;
+				break;
 			}
 		}
-		else if (action == GLFW_RELEASE)
-			isDragging = false;
 	}
 }
 
