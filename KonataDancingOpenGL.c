@@ -11,6 +11,7 @@
 
 #define WIN_SIZE_H 360
 #define WIN_SIZE_W 494
+#define NUM_TEXTURES 711
 
 typedef struct
 {
@@ -26,12 +27,15 @@ static const float texCord[] = { 0,1, 1,1, 1,0, 0,0 };
 
 #define TARGET_FRAME_TIME 1.0f / 35.0f
 
+GLuint texturePool[NUM_TEXTURES];
+int currentTextureLoad = NUM_TEXTURES;
+
 GLFWwindow* winInit();
 void winHints();
 void glfwErrLog();
 void mainLoop(GLFWwindow* window, TimeManager* timeManager);
-void render(GLuint texture, const float* vertex, const float* texCord);
-void loadImg(int index, GLuint* texture);
+void render(const float* vertex, const float* texCord);
+void loadImg(int index);
 void updataImgIndex(int* index);
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
@@ -67,8 +71,6 @@ void mainLoop(GLFWwindow* window, TimeManager* timeManager)
 {
 	int imgIndex = 1;
 
-	GLuint texture;
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
@@ -76,14 +78,14 @@ void mainLoop(GLFWwindow* window, TimeManager* timeManager)
 		timeManager->startTime = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		loadImg(imgIndex, &texture);
-		render(texture, vertex, texCord);
-		glDeleteTextures(1, &texture);
+		loadImg(imgIndex);
+		render(vertex, texCord);
 		updataImgIndex(&imgIndex);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		if (currentTextureLoad > 0)
+			stbi_image_free(imageData);
 		fpsSync(timeManager);
-		stbi_image_free(imageData);
 	}
 }
 
@@ -117,46 +119,48 @@ void glfwErrLog()
 	glfwTerminate();
 }
 
-void render(GLuint texture, const float* vertex, const float* texCord)
+void render(const float* vertex, const float* texCord)
 {
-	glBindTexture(GL_TEXTURE_2D, texture);
-
 	glPushMatrix();
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		// render 
+		// start render 
 		glVertexPointer(3, GL_FLOAT, 0, vertex);
 		glTexCoordPointer(2, GL_FLOAT, 0, texCord);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		// render
+		// end render
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glPopMatrix();
 }
 
-void loadImg(int index, GLuint* texture)
+void loadImg(int index)
 {
-	char path[32] = { '\0' };
-	sprintf_s(path, 32, "frames\\frame_%04d.png", index);
-	int width, height, cnt;
-	imageData = stbi_load(path, &width, &height, &cnt, 0);
+	if (currentTextureLoad > 0)
+	{
+		char path[32] = { '\0' };
+		sprintf_s(path, 32, "frames\\frame_%04d.png", index);
+		int width, height, cnt;
+		imageData = stbi_load(path, &width, &height, &cnt, 0);
 
-	glGenTextures(1, texture);
-	glBindTexture(GL_TEXTURE_2D, *texture);
+		glGenTextures(1, &texturePool[index]);
+		glBindTexture(GL_TEXTURE_2D, texturePool[index]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIN_SIZE_W, WIN_SIZE_H, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+		currentTextureLoad -= 2;
+	}
+	else glBindTexture(GL_TEXTURE_2D, texturePool[index]);
 }
 
 void updataImgIndex(int* index)
 {
+	if (*index == NUM_TEXTURES)
+		*index = -1;
 	*index += 2;
-	if (*index == 713)
-		*index = 1;
 }
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
@@ -212,13 +216,9 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 bool isOpaquePixel(int x, int y)
 {
-	if (!imageData) 
-		return false;
-
-	int index = (y * WIN_SIZE_W + x) * 4;
-
-	unsigned char alpha = imageData[index + 3];
-	return alpha > 0;
+	unsigned char pixel[4];
+	glReadPixels(x, WIN_SIZE_H - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+	return pixel[3] > 0;
 }
 
 void setupRenderingState()
