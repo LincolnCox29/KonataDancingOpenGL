@@ -1,6 +1,4 @@
 ﻿  KonataDancingOpenGL.c
-C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(37,12): warning C4026: функция объявлена со списком формальных параметров
-C:\Users\79242\Desktop\KonataDancingOpenGL\KonataDancingOpenGL.c(37,12): warning C4008: WinMain: пропуск атрибута "static"
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
   Создание кода
   0 of 170 functions ( 0.0%) were compiled, the rest were copied from previous compilation.

@@ -12,6 +12,11 @@
 #define WIN_SIZE_H 360
 #define WIN_SIZE_W 494
 
+typedef struct
+{
+	double endTime, frameTime, waitTime, startTime;
+} TimeManager;
+
 static bool isDragging = false;
 static unsigned char* imageData = NULL;
 static POINT lastPos;
@@ -23,8 +28,8 @@ static const float texCord[] = { 0,1, 1,1, 1,0, 0,0 };
 
 GLFWwindow* winInit();
 void winHints();
-void errLog();
-void mainLoop(GLFWwindow* window);
+void glfwErrLog();
+void mainLoop(GLFWwindow* window, TimeManager* timeManager);
 void render(GLuint texture, const float* vertex, const float* texCord);
 void loadImg(int index, GLuint* texture);
 void updataImgIndex(int* index);
@@ -32,42 +37,43 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
 bool isOpaquePixel(int x, int y);
 void setupRenderingState();
-void fpsSync(double startTime);
+void fpsSync(TimeManager* timeManager);
 
-static int WinMain()
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	if (!glfwInit())
-		errLog();
+		glfwErrLog();
 	winHints();
 	GLFWwindow* window = winInit();
 	if (window == NULL)
-		errLog();
+		glfwErrLog();
 	glfwSwapInterval(1);
 	glewExperimental = true; // Core OpenGL
 	if (glewInit() != GLEW_OK)
-		errLog();
+		glfwErrLog();
 
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 	glfwSetCursorPosCallback(window, cursorPosCallback);
 
 	setupRenderingState();
-	mainLoop(window);
+
+	TimeManager* timeManager = malloc(sizeof(TimeManager));
+
+	mainLoop(window, timeManager);
 	return 0;
 }
 
-void mainLoop(GLFWwindow* window)
+void mainLoop(GLFWwindow* window, TimeManager* timeManager)
 {
 	int imgIndex = 1;
 
 	GLuint texture;
 
-	double startTime;
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		startTime = glfwGetTime();
+		timeManager->startTime = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		loadImg(imgIndex, &texture);
@@ -76,7 +82,7 @@ void mainLoop(GLFWwindow* window)
 		updataImgIndex(&imgIndex);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		fpsSync(startTime);
+		fpsSync(timeManager);
 		stbi_image_free(imageData);
 	}
 }
@@ -101,7 +107,7 @@ void winHints()
 	glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
 }
 
-void errLog()
+void glfwErrLog()
 {
 #ifdef DEBUG
 	const char* description;
@@ -222,16 +228,14 @@ void setupRenderingState()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void fpsSync(double startTime)
+void fpsSync(TimeManager* timeManager)
 {
-	double endTime, frameTime, waitTime;
+	timeManager->endTime = glfwGetTime();
+	timeManager->frameTime = timeManager->endTime - timeManager->startTime;
 
-	endTime = glfwGetTime();
-	frameTime = endTime - startTime;
-
-	if (frameTime < TARGET_FRAME_TIME)
+	if (timeManager->frameTime < TARGET_FRAME_TIME)
 	{
-		waitTime = TARGET_FRAME_TIME - frameTime;
-		Sleep((DWORD)(waitTime * 1000));
+		timeManager->waitTime = TARGET_FRAME_TIME - timeManager->frameTime;
+		Sleep((DWORD)(timeManager->waitTime * 1000));
 	}
 }
