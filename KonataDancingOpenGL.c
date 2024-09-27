@@ -27,23 +27,22 @@ static const float texCord[] = { 0,1, 1,1, 1,0, 0,0 };
 
 #define TARGET_FRAME_TIME 1.0f / 35.0f
 
-GLuint texturePool[NUM_TEXTURES];
-int currentTextureLoad = NUM_TEXTURES;
+static GLuint texturePool[NUM_TEXTURES];
+static int currentTextureLoad = NUM_TEXTURES;
 
 GLFWwindow* winInit();
 void winHints();
 void glfwErrLog();
 void mainLoop(GLFWwindow* window, TimeManager* timeManager);
 void render(const float* vertex, const float* texCord);
-void loadImg(int index);
-void loadTexture(int index);
+void loadImg(const int index);
+void loadTexture(const int index);
 void updataImgIndex(int* index);
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
-bool isOpaquePixel(int x, int y);
+bool isOpaquePixel(const int x, const int y);
 void setupRenderingState();
 void fpsSync(TimeManager* timeManager);
-void setClickThrough(HWND hwnd);
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -93,14 +92,13 @@ void mainLoop(GLFWwindow* window, TimeManager* timeManager)
 
 GLFWwindow* winInit()
 {
-	GLFWwindow* window;
-	window = glfwCreateWindow(WIN_SIZE_W, WIN_SIZE_H, "", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(WIN_SIZE_W, WIN_SIZE_H, "", NULL, NULL);
+
 	glfwMakeContextCurrent(window);
 
 	HWND hwnd = glfwGetWin32Window(window);
 
-	LONG style = GetWindowLong(hwnd, GWL_EXSTYLE);
-	SetWindowLong(hwnd, GWL_EXSTYLE, style | WS_EX_LAYERED);
+	SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
 
 	SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 
@@ -142,7 +140,7 @@ void render(const float* vertex, const float* texCord)
 	glPopMatrix();
 }
 
-void loadTexture(int index)
+void loadTexture(const int index)
 {
 	if (currentTextureLoad > 0)
 	{
@@ -161,12 +159,12 @@ void loadTexture(int index)
 	else glBindTexture(GL_TEXTURE_2D, texturePool[index]);
 }
 
-void loadImg(int index)
+void loadImg(const int index)
 {
 	char path[32] = { '\0' };
 	sprintf_s(path, 32, "frames\\frame_%04d.png", index);
-	int width, height, cnt;
-	imageData = stbi_load(path, &width, &height, &cnt, 0);
+	int dummy;
+	imageData = stbi_load(path, &dummy, &dummy, &dummy, 0);
 }
 
 void updataImgIndex(int* index)
@@ -228,7 +226,7 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 	}
 }
 
-bool isOpaquePixel(int x, int y)
+bool isOpaquePixel(const int x, const int y)
 {
 	unsigned char pixel[4];
 	glReadPixels(x, WIN_SIZE_H - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
