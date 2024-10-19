@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>C:\Program Files\OpenGl\libs;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Program Files\OpenGl\libs;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>C:\Program Files\OpenGl\libs;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Program Files\OpenGl\libs;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -112,14 +112,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\OpenGl\glfw-3.4.bin.WIN64\include;C:\Program Files\OpenGl\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glfw-3.4.bin.WIN64\include;C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files\OpenGl\glfw-3.4.bin.WIN64\lib-vc2022;C:\Program Files\OpenGl\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EntryPointSymbol>WinMainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\OpenGl\glfw-3.4.bin.WIN64\include;C:\Program Files\OpenGl\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glfw-3.4.bin.WIN64\include;C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,7 +139,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files\OpenGl\glfw-3.4.bin.WIN64\lib-vc2022;C:\Program Files\OpenGl\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\libs\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EntryPointSymbol>WinMainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>

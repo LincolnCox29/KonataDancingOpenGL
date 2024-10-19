@@ -7,16 +7,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <stdbool.h>
-#include <windows.h>
 
 #define WIN_SIZE_H 360
 #define WIN_SIZE_W 494
 #define NUM_TEXTURES 711
-
-typedef struct
-{
-	double endTime, frameTime, waitTime, startTime;
-} TimeManager;
 
 static bool isDragging = false;
 static unsigned char* imageData = NULL;
@@ -28,21 +22,21 @@ static const float texCord[] = { 0,1, 1,1, 1,0, 0,0 };
 #define TARGET_FRAME_TIME 1.0f / 35.0f
 
 static GLuint texturePool[NUM_TEXTURES];
+static GLuint currentBoundTexture = 0;
 static int currentTextureLoad = NUM_TEXTURES;
 
 GLFWwindow* winInit();
 void winHints();
 void glfwErrLog();
-void mainLoop(GLFWwindow* window, TimeManager* timeManager);
-void render(const float* vertex, const float* texCord);
+void mainLoop(GLFWwindow* window);
+void render(const float* vertex, const float* texCord, const int textureIndex);
 void loadImg(const int index);
-void loadTexture(const int index);
-void updataImgIndex(int* index);
+void loadAllTextures();
+void updateTextureIndex(int* index);
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
 bool isOpaquePixel(const int x, const int y);
 void setupRenderingState();
-void fpsSync(TimeManager* timeManager);
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -62,31 +56,31 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	setupRenderingState();
 
-	TimeManager* timeManager = malloc(sizeof(TimeManager));
-
-	mainLoop(window, timeManager);
+	loadAllTextures();
+	mainLoop(window);
 	return 0;
 }
 
-void mainLoop(GLFWwindow* window, TimeManager* timeManager)
+void mainLoop(GLFWwindow* window)
 {
-	int imgIndex = 1;
+	int textureIndex = 1;
+
+	int textureUsageCount = 2;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		timeManager->startTime = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		loadTexture(imgIndex);
-		render(vertex, texCord);
-		updataImgIndex(&imgIndex);
+		render(vertex, texCord, textureIndex);
+		if (--textureUsageCount == 0)
+		{
+			updateTextureIndex(&textureIndex);
+			textureUsageCount = 2;
+		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		if (currentTextureLoad > 0)
-			stbi_image_free(imageData);
-		fpsSync(timeManager);
 	}
 }
 
@@ -95,6 +89,8 @@ GLFWwindow* winInit()
 	GLFWwindow* window = glfwCreateWindow(WIN_SIZE_W, WIN_SIZE_H, "", NULL, NULL);
 
 	glfwMakeContextCurrent(window);
+
+	glfwSwapInterval(1);
 
 	HWND hwnd = glfwGetWin32Window(window);
 
@@ -125,38 +121,41 @@ void glfwErrLog()
 	glfwTerminate();
 }
 
-void render(const float* vertex, const float* texCord)
+void render(const float* vertex, const float* texCord, const int textureIndex)
 {
-	glPushMatrix();
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		// start render 
-		glVertexPointer(3, GL_FLOAT, 0, vertex);
-		glTexCoordPointer(2, GL_FLOAT, 0, texCord);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		// end render
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glPopMatrix();
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (currentBoundTexture != texturePool[textureIndex])
+	{
+		glBindTexture(GL_TEXTURE_2D, texturePool[textureIndex]);
+		currentBoundTexture = texturePool[textureIndex];
+	}
+
+	glVertexPointer(3, GL_FLOAT, 0, vertex);
+	glTexCoordPointer(2, GL_FLOAT, 0, texCord);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-void loadTexture(const int index)
+void loadAllTextures()
 {
-	if (currentTextureLoad > 0)
+	for (int i = 1; i < NUM_TEXTURES; i+=2)
 	{
-		loadImg(index);
+		loadImg(i);
 
-		glGenTextures(1, &texturePool[index]);
-		glBindTexture(GL_TEXTURE_2D, texturePool[index]);
+		glGenTextures(1, &texturePool[i]);
+		glBindTexture(GL_TEXTURE_2D, texturePool[i]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIN_SIZE_W, WIN_SIZE_H, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 
-		currentTextureLoad -= 2;
+		stbi_image_free(imageData);
 	}
-	else glBindTexture(GL_TEXTURE_2D, texturePool[index]);
 }
 
 void loadImg(const int index)
@@ -167,11 +166,11 @@ void loadImg(const int index)
 	imageData = stbi_load(path, &dummy, &dummy, &dummy, 0);
 }
 
-void updataImgIndex(int* index)
+void updateTextureIndex(int* index)
 {
-	if (*index == NUM_TEXTURES)
-		*index = -1;
 	*index += 2;
+	if (*index >= NUM_TEXTURES)
+		*index = 1;
 }
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
@@ -238,16 +237,4 @@ void setupRenderingState()
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void fpsSync(TimeManager* timeManager)
-{
-	timeManager->endTime = glfwGetTime();
-	timeManager->frameTime = timeManager->endTime - timeManager->startTime;
-
-	if (timeManager->frameTime < TARGET_FRAME_TIME)
-	{
-		timeManager->waitTime = TARGET_FRAME_TIME - timeManager->frameTime;
-		Sleep((DWORD)(timeManager->waitTime * 1000));
-	}
 }
