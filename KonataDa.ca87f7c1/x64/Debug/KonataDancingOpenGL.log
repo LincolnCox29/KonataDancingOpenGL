@@ -1,4 +1,2 @@
-﻿glew32s.lib(glew.obj) : warning LNK4099: "" PDB не найден с "glew32s.lib(glew.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
-LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
-LINK : warning LNK4098: библиотека по умолчанию "MSVCRT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
-  KonataDancingOpenGL.vcxproj -> C:\Users\Justk\Desktop\Projects\KonataDancingOpenGL\x64\Debug\KonataDancingOpenGL.exe
+﻿  KonataDancingOpenGL.c
+  KonataDancingOpenGL.vcxproj -> Z:\Projects\KonataDancingOpenGL\x64\Debug\KonataDancingOpenGL.exe

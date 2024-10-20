@@ -26,6 +26,7 @@ static GLuint currentBoundTexture = 0;
 static int currentTextureLoad = NUM_TEXTURES;
 
 GLFWwindow* winInit();
+inline int getRefreshRate();
 void winHints();
 void glfwErrLog();
 void mainLoop(GLFWwindow* window);
@@ -65,23 +66,35 @@ void mainLoop(GLFWwindow* window)
 {
 	int textureIndex = 1;
 
-	int textureUsageCount = 2;
+	int refreshRate = getRefreshRate();
+
+	int frameSkip = (int)(refreshRate / 37.0f + 0.5f);
+
+	if (frameSkip < 1) frameSkip = 1;
+
+	int textureUsageCount = frameSkip;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
-
 		glClear(GL_COLOR_BUFFER_BIT);
 		render(vertex, texCord, textureIndex);
+
 		if (--textureUsageCount == 0)
 		{
 			updateTextureIndex(&textureIndex);
-			textureUsageCount = 2;
+			textureUsageCount = frameSkip;
 		}
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+}
+
+inline int getRefreshRate()
+{
+	return glfwGetVideoMode(glfwGetPrimaryMonitor())->refreshRate;
 }
 
 GLFWwindow* winInit()

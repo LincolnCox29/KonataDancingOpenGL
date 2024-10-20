@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Justk\\Desktop\\Projects\\KonataDancingOpenGL\\",
+  "WorkspaceRootPath": "Z:\\Projects\\KonataDancingOpenGL\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CA87F7C1-998A-4649-BD27-7CC7E6D086E0}|KonataDancingOpenGL.vcxproj|C:\\Users\\Justk\\Desktop\\Projects\\KonataDancingOpenGL\\KonataDancingOpenGL.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{CA87F7C1-998A-4649-BD27-7CC7E6D086E0}|KonataDancingOpenGL.vcxproj|Z:\\Projects\\KonataDancingOpenGL\\KonataDancingOpenGL.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CA87F7C1-998A-4649-BD27-7CC7E6D086E0}|KonataDancingOpenGL.vcxproj|solutionrelative:KonataDancingOpenGL.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -20,13 +20,13 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "KonataDancingOpenGL.c",
-              "DocumentMoniker": "C:\\Users\\Justk\\Desktop\\Projects\\KonataDancingOpenGL\\KonataDancingOpenGL.c",
+              "DocumentMoniker": "Z:\\Projects\\KonataDancingOpenGL\\KonataDancingOpenGL.c",
               "RelativeDocumentMoniker": "KonataDancingOpenGL.c",
-              "ToolTip": "C:\\Users\\Justk\\Desktop\\Projects\\KonataDancingOpenGL\\KonataDancingOpenGL.c",
+              "ToolTip": "Z:\\Projects\\KonataDancingOpenGL\\KonataDancingOpenGL.c",
               "RelativeToolTip": "KonataDancingOpenGL.c",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAFEAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAgwFYAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-09-24T07:38:44.518Z",
+              "WhenOpened": "2024-10-20T09:49:03.991Z",
               "EditorCaption": ""
             }
           ]
