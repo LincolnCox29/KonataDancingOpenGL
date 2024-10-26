@@ -2,7 +2,7 @@
 
 **KonataDancingOpenGL** is an implementation of Konata's dance from the anime **Lucky Star**. The program is written in C using OpenGL and shows a sequence of images (frames) in a window with a transparent background, allowing interaction by dragging the window when clicking on opaque pixels.
 
-![image](https://github.com/LincolnCox29/KonataDancingOpenGL/blob/master/x64/Release/frames/frame_0135.png)
+![image](https://github.com/LincolnCox29/KonataDancingOpenGL/blob/master/frames/frame_0135.png)
 
 ## Features
 
