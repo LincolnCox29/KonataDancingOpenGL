@@ -30,7 +30,7 @@ Make sure you have the following components installed:
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
+   git clone 'https://github.com/LincolnCox29/KonataDancingOpenGL'
    cd KonataDancingOpenGL
    ```
 
