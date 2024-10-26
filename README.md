@@ -39,13 +39,13 @@ Make sure you have the following components installed:
    ```bash
    mkdir build
    cd build
-   cmake ..
+   cmake -DCMAKE_BUILD_TYPE=Release ..
    ```
 
 3. Build the project:
 
    ```bash
-   make
+   cmake --build . --config Release
    ```
 
    For Windows users with Visual Studio, open the generated `.sln` file and build the project.

@@ -6,10 +6,12 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 
-set(CMAKE_BUILD_TYPE Release)
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 set(FRAMES_DIRECTORY "${CMAKE_SOURCE_DIR}/frames")
-set(OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug/frames")
+set(OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/frames")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/glew-2.1.0/include)
@@ -25,7 +27,7 @@ target_link_libraries(KonataDancingOpenGL
 
 add_custom_command(TARGET KonataDancingOpenGL POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${FRAMES_DIRECTORY} ${OUTPUT_DIRECTORY}
-    COMMENT "Copying frames directory to Release output folder"
+    COMMENT "Copying frames directory to ${CMAKE_BUILD_TYPE} output folder"
 )
 
 target_compile_definitions(KonataDancingOpenGL PRIVATE GLEW_STATIC)
